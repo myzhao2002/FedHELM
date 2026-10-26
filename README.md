@@ -57,20 +57,20 @@ Open the [management console](http://127.0.0.1:16000/) and the [fault laboratory
 
 | Page | What to inspect or control |
 | --- | --- |
-| [Overview](http://127.0.0.1:16000/) | Fleet status, current activity, and recent incidents |
-| [Topology](http://127.0.0.1:16000/topology) | Edge–end relationships, observed transfers, and interactive node details |
-| [Nodes and resources](http://127.0.0.1:16000/resources) | Agent availability, workload status, resource information, and node workspaces |
-| [Telemetry](http://127.0.0.1:16000/telemetry) | Metric sequences, anomaly evidence, and monitoring activity |
-| [Fault tasks](http://127.0.0.1:16000/tasks) | Timestamped diagnosis, routing, execution, and recovery timelines |
-| [Models and transfers](http://127.0.0.1:16000/models) | Model inventory, versions, uploaded updates, aggregation, and synchronization |
-| [Fault memory](http://127.0.0.1:16000/memory) | Verified cases and reusable remediation knowledge |
-| [Data storage](http://127.0.0.1:16000/storage) | Persistent storage locations, records, and node artifacts |
-| [Datasets](http://127.0.0.1:16000/datasets) | Per-node training data selection, import, preview, and evaluation |
-| [Algorithms](http://127.0.0.1:16000/algorithms) | Inference costs, mode statistics, and aggregation contributions |
-| [Model API settings](http://127.0.0.1:16000/settings) | Provider endpoints, model names, credential references, and call budgets |
-| [Training workbench](http://127.0.0.1:16000/lab) | Manual collection, training, aggregation, synchronization, and diagnosis |
-| [Operation logs](http://127.0.0.1:16000/logs) | Searchable, paginated operation records and input/output details |
-| [Fault laboratory](http://127.0.0.1:16090/) | Inject or restore faults in a selected test workload |
+| Overview | Fleet status, current activity, and recent incidents |
+| Topology | Edge–end relationships, observed transfers, and interactive node details |
+| Nodes and resources | Agent availability, workload status, resource information, and node workspaces |
+| Telemetry | Metric sequences, anomaly evidence, and monitoring activity |
+| Fault tasks | Timestamped diagnosis, routing, execution, and recovery timelines |
+| Models and transfers | Model inventory, versions, uploaded updates, aggregation, and synchronization |
+| Fault memory | Verified cases and reusable remediation knowledge |
+| Data storage | Persistent storage locations, records, and node artifacts |
+| Datasets | Per-node training data selection, import, preview, and evaluation |
+| Algorithms | Inference costs, mode statistics, and aggregation contributions |
+| Model API settings | Provider endpoints, model names, credential references, and call budgets |
+| Training workbench | Manual collection, training, aggregation, synchronization, and diagnosis |
+| Operation logs | Searchable, paginated operation records and input/output details |
+| Fault laboratory | Inject or restore faults in a selected test workload |
 
 ## Run a fault-management session
 
