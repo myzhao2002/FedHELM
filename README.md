@@ -2,6 +2,8 @@
 
 **An edge–end simulation platform for collaborative fault diagnosis and federated learning.**
 
+![FedHELM architecture with a GPU edge node and heterogeneous end nodes](assets/fedhelm-architecture.png)
+
 [Overview](#overview) · [Quick start](#quick-start) · [Interface guide](#interface-guide) · [Simulation manual](SIMULATION.md) · [Physical-node deployment](SIMULATION.md#physical-node-deployment)
 
 ## Overview
