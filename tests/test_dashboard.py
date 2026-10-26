@@ -24,6 +24,11 @@ class DashboardTests(unittest.TestCase):
         spec = self.client.get('/openapi.json').json()
         self.assertEqual(spec['paths']['/memory/cases']['post']['summary'], '提交已验证的成功案例')
 
+    def test_paper_review_page_removed_from_navigation(self):
+        script = self.client.get('/assets/console.js').text
+        self.assertNotIn('论文对照', script)
+        self.assertEqual(self.client.get('/paper').status_code, 404)
+
     def test_resources_browser_page_preserves_json_api(self):
         page = self.client.get('/resources?ui=nav3', headers={'Accept': 'text/html,application/xhtml+xml'})
         self.assertEqual(page.status_code, 200)

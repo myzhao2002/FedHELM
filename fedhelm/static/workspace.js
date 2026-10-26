@@ -61,23 +61,10 @@ function taskDetailPage(){
   return `<div class="task-workspace"><a class="back-link" href="/tasks">← 返回任务列表</a><div class="incident-heading"><div><div class="eyebrow">事件详情 · ${esc(name(first?.node))}</div><h2>${esc(title)}</h2><div class="mono muted">${esc(workspaceTaskId)}</div></div><div class="row-actions">${first?`<a class="button-link" href="/node/${first.node}">查看节点</a>`:''}<a class="button-link" href="/inject">新建实验</a></div></div><div class="incident-meta">${badge(p?.status||steps.at(-1)?.stage||'等待记录',p?.status.includes('失败')?'bad':'')}<span>开始 ${esc(time(first?.time))}</span><span>耗时 ${duration(p?.duration_seconds)}</span><span class="poll-label">● 每2秒读取事件</span></div><div class="tabs detail-tabs">${tabs.map(([id,t])=>`<button data-detail-tab="${id}" class="${workspaceTab===id?'selected':''}">${t}</button>`).join('')}</div><div id="task-detail-panel">${body}</div></div>`;
 }
 
-const coverage=[
-  ['模型规模','部分实现','六层Transformer，32维、77,542参数、六分类','论文为384维、22.6M参数及十类故障','/models'],
-  ['输入表征','部分实现','12项数值×20点；日志与业务span留存','未做日志文本与调用链联合编码','/telemetry'],
-  ['算法1','机制已实现','可行模式、加权代价、EWMA、最终置信校验','能耗估计、带宽先验、质量为恢复反馈代理','/algorithms'],
-  ['算法2','机制已实现','D/Q/S贡献度、探针、方向EWMA、冷启动、压缩聚合','自定义HTTP，未接Flower；由按钮发起训练','/algorithms'],
-  ['语言模型与动作','API已接入','Local/Edge兼容API、分角色提示词与调用限额','未加载本地SLM/LLM；单动作白名单，未做多动作排序','/settings'],
-  ['联邦故障记忆','部分实现','成功反馈准入、余弦检索、0.65/0.35融合、摘要同步','SQLite检索；上传仍含完整反馈样本，未改为紧凑知识条目与每轮20条批量协议','/memory'],
-  ['部署与真实注入','部分实现','16端独立进程（A5/B6/C5）、五类真实业务故障','K8s未部署验证；另五类故障尚未实现','/inject'],
-  ['恢复与实验','仿真配置','持续HTTP验证，支持3秒/300秒窗口','节点数已对齐；未开展100轮、消融与统计复现实验','/algorithms']
-];
-function paperPage(){return `<div class="review-banner"><div><span class="eyebrow">论文对照 · §3–6</span><h2>关键机制已接入，仍有配置与实现差异</h2><p>下面区分实际实现、接口仿真和未完成项。流程演示通过不等于论文实验结果复现。</p></div><a class="button-link" href="/algorithms">查看算法运行 →</a></div>`+panel('逐项核对',table(['模块','当前状态','系统实现','与论文的差异','查看'],coverage.map(([a,b,c,d,url])=>[`<strong>${a}</strong>`,badge(b,b==='机制已实现'?'':'neutral'),c,d,`<a class="text-link" href="${url}">进入模块 ↗</a>`])))+panel('界面参考',`<div class="panel-body"><p>本次重构借鉴事件管理平台的独立详情页、告警状态筛选，以及按节点组织的工作空间。</p><div class="row-actions"><a class="text-link" href="https://support.pagerduty.com/main/docs/incidents" target="_blank" rel="noreferrer">PagerDuty · 事件时间线 ↗</a><a class="text-link" href="https://grafana.com/docs/grafana/latest/alerting/monitor-status/view-alert-state-history/" target="_blank" rel="noreferrer">Grafana · 告警状态历史 ↗</a><a class="text-link" href="https://headlamp.dev/docs/latest/learn/local-cluster/" target="_blank" rel="noreferrer">Headlamp · 节点与工作负载 ↗</a></div></div>`);}
-
 openTask=async function(id){location.assign(taskLink(id));};
 $('quick').textContent='训练工作台';$('quick').onclick=()=>location.assign('/lab');
 if(key==='/topology')document.body.classList.add('topology-screen');
 if(key==='/settings'){$('title').textContent='模型API配置';$('crumb').textContent='模型API配置';$('description').textContent='接口地址、模型名称与后端密钥；留空时不调用模型';}
-if(key==='/paper'){$('eyebrow').textContent='PAPER REVIEW';$('title').textContent='论文对照';$('crumb').textContent='论文对照';$('description').textContent='实现范围、算法对应与尚未完成项';}
 if(key==='/tasks'&&workspaceTaskId){$('title').textContent='故障任务';$('description').textContent='查看诊断、调度和修复的完整证据';document.body.classList.add('incident-page');}
 
 async function updateTaskList(){const params=new URLSearchParams(Object.entries(taskFilter).filter(([,v])=>v!==''));window.history.replaceState(null,'','/tasks?'+params);await loadTaskWorkspace();render();}

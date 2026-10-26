@@ -83,7 +83,6 @@ def console_asset(asset:Literal['console.css','console.js','workspace.js','works
 @router.get('/topology',include_in_schema=False)
 @router.get('/settings',include_in_schema=False)
 @router.get('/datasets',include_in_schema=False)
-@router.get('/paper',include_in_schema=False)
 @router.get('/telemetry',include_in_schema=False)
 @router.get('/algorithms',include_in_schema=False)
 @router.get('/models',include_in_schema=False)
