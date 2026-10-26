@@ -1,0 +1,2413 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FedHELM · 边缘协调与故障记忆",
+    "description": "FedHELM中文接口文档。大小语言模型保留替身，轻量模型支持真实PyTorch训练。点击接口查看输入输出，使用“Try it out”进行测试。",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "检查服务存活状态",
+        "description": "返回进程状态与模拟标记；业务是否恢复请查看观测结果。",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "上报或查看资源状态",
+        "description": "资源包括节点档次、CPU、内存、带宽、往返时延和边缘可达性，source字段区分实测与人工策略；带宽可为先验，不能当作实测。",
+        "operationId": "resource_snapshot_resources_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "上报或查看资源状态",
+        "description": "资源包括节点档次、CPU、内存、带宽、往返时延和边缘可达性，source字段区分实测与人工策略；带宽可为先验，不能当作实测。",
+        "operationId": "report_resources_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Resources"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diagnose": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "请求边缘诊断与处置方案",
+        "description": "输入观测和初步诊断，检索相似案例后调用边缘模型适配器。",
+        "operationId": "diagnose_diagnose_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InferenceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memory/cases": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "提交已验证的成功案例",
+        "description": "校验事件关联、根因确认、置信度与连续恢复观测后收录。",
+        "operationId": "store_case_memory_cases_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Case"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memory/snapshot": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "获取共享故障案例",
+        "description": "返回最多100条案例，供端节点同步和本地检索。",
+        "operationId": "snapshot_memory_snapshot_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memory/search": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "检索相似故障案例",
+        "description": "按同版本特征向量计算余弦相似度，返回匹配案例。",
+        "operationId": "search_memory_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Search"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/monitor": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看自动调度状态与处置时间线",
+        "operationId": "monitor_status_ui_monitor_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "启用或暂停自动巡检",
+        "description": "暂停后不再发起新处置，已开始的处置会完成验证。不会自动训练或注入故障。",
+        "operationId": "monitor_control_ui_monitor_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorControl"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/events": {
+      "post": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "记录端节点实际处置步骤",
+        "operationId": "trace_ui_events_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Trace"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/tasks": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "按节点、状态、类型筛选并分页查看任务摘要",
+        "operationId": "task_list_ui_tasks_get",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "a",
+                    "b",
+                    "c",
+                    "edge"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Node"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "",
+                "waiting",
+                "failed",
+                "resolved",
+                "cancelled",
+                "recorded"
+              ],
+              "type": "string",
+              "default": "",
+              "title": "Status"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "fault",
+                "operation",
+                "all"
+              ],
+              "type": "string",
+              "default": "fault",
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "default": "",
+              "title": "Search"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 5,
+              "default": 20,
+              "title": "Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/records": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "筛选与分页查询操作或模型传输日志",
+        "operationId": "records_page_ui_records_get",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "a",
+                    "b",
+                    "c",
+                    "edge"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Node"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "",
+                "transfer",
+                "upload",
+                "download",
+                "aggregate"
+              ],
+              "type": "string",
+              "default": "",
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "default": "",
+              "title": "Search"
+            }
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "default": "",
+              "title": "Stage"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 5,
+              "default": 20,
+              "title": "Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/model-versions": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看已记录的模型版本快照",
+        "operationId": "recorded_models_ui_model_versions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/validation/{node}": {
+      "put": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "设置端侧恢复验证时间，3秒联调或300秒论文窗口",
+        "operationId": "node_validation_ui_validation__node__put",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidationSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/datasets/{node}": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看指定端节点数据集",
+        "operationId": "node_datasets_ui_datasets__node__get",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/datasets/{node}/preview/{dataset_id}": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "预览指定端数据集的样本时序",
+        "operationId": "dataset_preview_ui_datasets__node__preview__dataset_id__get",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/dataset-schema": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "获取后续数据集接入所需的标准JSONSchema",
+        "operationId": "dataset_schema_ui_dataset_schema_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/datasets/{node}/import": {
+      "post": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "向指定端导入标准JSON数据集",
+        "operationId": "dataset_import_ui_datasets__node__import_post",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetImport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/datasets/{node}/generate": {
+      "post": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "生成虚构时序训练数据，不改变在线业务",
+        "operationId": "dataset_generate_ui_datasets__node__generate_post",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/datasets/{node}/selection": {
+      "put": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "切换本端训练数据集",
+        "operationId": "dataset_selection_ui_datasets__node__selection_put",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true,
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/datasets/{node}/evaluate": {
+      "post": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "评估指定端当前模型的独立测试分区",
+        "operationId": "dataset_evaluate_ui_datasets__node__evaluate_post",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/review-case": {
+      "post": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "人工确认实际诊断根因并收录成功案例",
+        "operationId": "review_case_ui_review_case_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseReview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/telemetry": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看各端实测窗口、异常证据与采集来源",
+        "operationId": "telemetry_data_ui_telemetry_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/algorithm": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看论文重构算法状态与实现边界",
+        "operationId": "algorithm_data_ui_algorithm_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/fault-catalog": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看论文故障清单与真实注入支持范围",
+        "operationId": "fault_catalog_ui_fault_catalog_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/task/{task_id}": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看单次任务完整步骤",
+        "operationId": "task_details_ui_task__task_id__get",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/history": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查询持久化任务链、指标与操作日志",
+        "operationId": "history_data_ui_history_get",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "a",
+                    "b",
+                    "c",
+                    "edge"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Node"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "name": "task_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Task Before"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/node/{node}/artifacts": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看端侧模型、训练数据和本地日志",
+        "operationId": "node_artifacts_ui_node__node__artifacts_get",
+        "parameters": [
+          {
+            "name": "node",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "a",
+                "b",
+                "c"
+              ],
+              "type": "string",
+              "title": "Node"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/cases": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "分页查看系统成功处置案例",
+        "operationId": "case_history_ui_cases_get",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "node",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "a",
+                    "b",
+                    "c"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Node"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/status": {
+      "get": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "查看全部节点与服务状态",
+        "description": "读取服务存活状态、业务观测、全局模型版本、持久化更新与服务部署清单。离线状态不会显示为正常。",
+        "operationId": "status_ui_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ui/command": {
+      "post": {
+        "tags": [
+          "可视化控制台"
+        ],
+        "summary": "执行控制台测试操作",
+        "description": "按按钮执行故障注入、诊断处置、案例提交或联邦操作。训练后端torch执行真实训练；process/kubernetes业务后端实际注入测试工作负载故障，synthetic后端仅模拟。",
+        "operationId": "command_ui_command_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Command"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Case": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "source_node": {
+            "type": "string",
+            "title": "Source Node"
+          },
+          "diagnosis": {
+            "$ref": "#/components/schemas/Diagnosis"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "feedback": {
+            "$ref": "#/components/schemas/Feedback"
+          },
+          "root_cause_confirmed": {
+            "type": "boolean",
+            "title": "Root Cause Confirmed",
+            "default": false
+          },
+          "label_source": {
+            "type": "string",
+            "enum": [
+              "unconfirmed",
+              "synthetic_injector",
+              "testbed_injector",
+              "operator"
+            ],
+            "title": "Label Source",
+            "default": "unconfirmed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "case_id",
+          "source_node",
+          "diagnosis",
+          "plan",
+          "feedback"
+        ],
+        "title": "Case"
+      },
+      "CaseReview": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "title": "Task Id"
+          },
+          "confirmed_root_cause": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout",
+              "unknown"
+            ],
+            "title": "Confirmed Root Cause"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "task_id",
+          "confirmed_root_cause"
+        ],
+        "title": "CaseReview"
+      },
+      "Command": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "inject",
+              "run",
+              "submit",
+              "sync",
+              "train",
+              "aggregate",
+              "sync_all",
+              "train_all",
+              "resources",
+              "collect"
+            ],
+            "title": "Action"
+          },
+          "node": {
+            "type": "string",
+            "enum": [
+              "a",
+              "b",
+              "c"
+            ],
+            "title": "Node",
+            "default": "a"
+          },
+          "fault": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout",
+              "unknown"
+            ],
+            "title": "Fault",
+            "default": "service_down"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "lightweight",
+              "local",
+              "edge"
+            ],
+            "title": "Mode",
+            "default": "auto"
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "slow",
+              "offline"
+            ],
+            "title": "Profile",
+            "default": "normal"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "Command"
+      },
+      "DatasetImport": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+            "title": "Dataset Id"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "external",
+              "testbed"
+            ],
+            "title": "Source"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Description",
+            "default": ""
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/Record"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Records"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dataset_id",
+          "source",
+          "records"
+        ],
+        "title": "DatasetImport"
+      },
+      "Diagnosis": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "root_cause": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout",
+              "unknown"
+            ],
+            "title": "Root Cause"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence"
+          },
+          "embedding": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 384,
+            "minItems": 4,
+            "title": "Embedding"
+          },
+          "embedding_version": {
+            "type": "string",
+            "title": "Embedding Version",
+            "default": "mock-features-v1"
+          },
+          "model_version": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Model Version"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Probabilities"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "legacy"
+          },
+          "memory_conflict": {
+            "type": "boolean",
+            "title": "Memory Conflict",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "root_cause",
+          "confidence",
+          "embedding",
+          "model_version",
+          "evidence"
+        ],
+        "title": "Diagnosis"
+      },
+      "Feedback": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "samples": {
+            "items": {
+              "$ref": "#/components/schemas/Observation"
+            },
+            "type": "array",
+            "title": "Samples"
+          },
+          "criterion": {
+            "type": "string",
+            "title": "Criterion"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "success",
+          "samples",
+          "criterion"
+        ],
+        "title": "Feedback"
+      },
+      "Frame": {
+        "properties": {
+          "timestamp": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timestamp",
+            "description": "采样Unix时间，可选；不作为模型特征"
+          },
+          "availability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Availability",
+            "description": "业务健康比例，0到1"
+          },
+          "error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Error Rate",
+            "description": "请求错误率，0到1"
+          },
+          "latency_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Latency Ms",
+            "description": "业务请求时延，毫秒"
+          },
+          "pool_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Pool Usage",
+            "description": "数据库连接池占用比例"
+          },
+          "worker_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Worker Usage",
+            "description": "工作线程占用比例"
+          },
+          "worker_wait_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Worker Wait Ms",
+            "description": "工作线程等待时长，毫秒"
+          },
+          "db_wait_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Db Wait Ms",
+            "description": "数据库连接等待，毫秒"
+          },
+          "dependency_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Dependency Ms",
+            "description": "下游HTTP依赖耗时，毫秒"
+          },
+          "dependency_error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Dependency Error Rate",
+            "description": "下游依赖错误率"
+          },
+          "config_error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Config Error Rate",
+            "description": "配置校验操作失败比例"
+          },
+          "cpu_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Cpu Usage",
+            "description": "业务进程CPU占用比例"
+          },
+          "rss_mb": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Rss Mb",
+            "description": "业务进程常驻内存，MB"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "availability",
+          "error_rate",
+          "latency_ms",
+          "pool_usage",
+          "worker_usage",
+          "worker_wait_ms",
+          "db_wait_ms",
+          "dependency_ms",
+          "dependency_error_rate",
+          "config_error_rate",
+          "cpu_usage",
+          "rss_mb"
+        ],
+        "title": "Frame"
+      },
+      "GenerateRequest": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+            "title": "Dataset Id"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed",
+            "default": 631
+          },
+          "per_class": {
+            "type": "integer",
+            "maximum": 30.0,
+            "minimum": 3.0,
+            "title": "Per Class",
+            "default": 6
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "balanced",
+              "non_iid",
+              "transition"
+            ],
+            "title": "Profile",
+            "default": "non_iid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dataset_id"
+        ],
+        "title": "GenerateRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InferenceRequest": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "observation": {
+            "$ref": "#/components/schemas/Observation"
+          },
+          "diagnosis": {
+            "$ref": "#/components/schemas/Diagnosis"
+          },
+          "retrieved_cases": {
+            "items": {
+              "$ref": "#/components/schemas/Case"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Retrieved Cases"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "observation",
+          "diagnosis"
+        ],
+        "title": "InferenceRequest"
+      },
+      "MonitorControl": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "MonitorControl"
+      },
+      "Observation": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "service_id": {
+            "type": "string",
+            "title": "Service Id"
+          },
+          "healthy": {
+            "type": "boolean",
+            "title": "Healthy"
+          },
+          "error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Error Rate"
+          },
+          "latency_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Latency Ms"
+          },
+          "pool_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Pool Usage"
+          },
+          "logs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Logs"
+          },
+          "workload_backend": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "process",
+              "kubernetes"
+            ],
+            "title": "Workload Backend",
+            "default": "synthetic"
+          },
+          "response_codes": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Response Codes"
+          },
+          "business_pid": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Business Pid"
+          },
+          "pod_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pod Name"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Metrics"
+          },
+          "spans": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Spans"
+          },
+          "observed_at": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "node_id",
+          "service_id",
+          "healthy",
+          "error_rate",
+          "latency_ms",
+          "pool_usage",
+          "logs"
+        ],
+        "title": "Observation"
+      },
+      "Plan": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "service_id": {
+            "type": "string",
+            "title": "Service Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "lightweight",
+              "local",
+              "edge"
+            ],
+            "title": "Mode"
+          },
+          "root_cause": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout",
+              "unknown"
+            ],
+            "title": "Root Cause"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "none",
+              "restart_service",
+              "restore_config",
+              "reset_pool",
+              "reset_workers",
+              "restore_dependency"
+            ],
+            "title": "Action"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Parameters"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "node_id",
+          "service_id",
+          "mode",
+          "root_cause",
+          "confidence",
+          "action",
+          "reason"
+        ],
+        "title": "Plan"
+      },
+      "Record": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Event Id"
+          },
+          "label": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout"
+            ],
+            "title": "Label"
+          },
+          "split": {
+            "type": "string",
+            "enum": [
+              "train",
+              "validation",
+              "test"
+            ],
+            "title": "Split"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/Frame"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Series",
+            "description": "按时间先后排列，最多20个真实或虚构时点"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "label",
+          "split",
+          "series"
+        ],
+        "title": "Record"
+      },
+      "Resources": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ],
+            "title": "Tier"
+          },
+          "cpu_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Cpu Usage",
+            "default": 0.2
+          },
+          "memory_available_mb": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Memory Available Mb",
+            "default": 2048
+          },
+          "bandwidth_mbps": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Bandwidth Mbps",
+            "default": 50
+          },
+          "rtt_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Rtt Ms",
+            "default": 10
+          },
+          "edge_available": {
+            "type": "boolean",
+            "title": "Edge Available",
+            "default": true
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "manual-policy"
+          },
+          "cpu_cores": {
+            "type": "integer",
+            "title": "Cpu Cores",
+            "default": 1
+          },
+          "energy_source": {
+            "type": "string",
+            "title": "Energy Source",
+            "default": "estimated, no power meter"
+          },
+          "bandwidth_source": {
+            "type": "string",
+            "title": "Bandwidth Source",
+            "default": "configured prior"
+          },
+          "edge_queue": {
+            "type": "integer",
+            "title": "Edge Queue",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "tier"
+        ],
+        "title": "Resources"
+      },
+      "Search": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "embedding": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 384,
+            "minItems": 4,
+            "title": "Embedding"
+          },
+          "embedding_version": {
+            "type": "string",
+            "title": "Embedding Version",
+            "default": "mock-features-v1"
+          },
+          "top_k": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "default": 3
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "embedding"
+        ],
+        "title": "Search"
+      },
+      "Trace": {
+        "properties": {
+          "node": {
+            "type": "string",
+            "enum": [
+              "a",
+              "b",
+              "c",
+              "edge"
+            ],
+            "title": "Node"
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "stage": {
+            "type": "string",
+            "title": "Stage"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "node",
+          "event_id",
+          "stage",
+          "detail"
+        ],
+        "title": "Trace"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ValidationSettings": {
+        "properties": {
+          "seconds": {
+            "type": "number",
+            "maximum": 300.0,
+            "minimum": 0.0,
+            "title": "Seconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "seconds"
+        ],
+        "title": "ValidationSettings"
+      }
+    }
+  }
+}

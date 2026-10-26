@@ -1,0 +1,4 @@
+# Install after requirements.training.txt. CPU benchmark; no cloud model calls.
+numpy==2.2.6
+scipy==1.16.2
+scikit-learn==1.7.2

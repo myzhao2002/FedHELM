@@ -1,0 +1,9 @@
+*
+!requirements.txt
+!requirements.lock.txt
+!fedhelm/
+!fedhelm/**
+!scripts/
+!scripts/**
+
+secrets/

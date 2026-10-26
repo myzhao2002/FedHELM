@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000"><rect width="100%" height="100%" fill="white"/>
+<text x="40" y="32" text-anchor="start" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="30" font-weight="700" fill="#26333b">FedHELM: edge–end architecture</text>
+<rect x="35" y="75" width="1530" height="280" fill="#f9fafb" stroke="#657079" stroke-width="1.5"/>
+<text x="60" y="108" text-anchor="start" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="24" font-weight="700" fill="#26333b">EDGE NODE</text>
+<rect x="60" y="145" width="325" height="160" fill="white" stroke="#345775" stroke-width="1.5"/>
+<text x="222.5" y="180.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="700" fill="#345775">Edge LLM</text>
+<text x="222.5" y="210.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">7B instruction model / vLLM</text>
+<text x="222.5" y="240.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">Diagnosis and action planning</text>
+<text x="222.5" y="270.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">Frozen language-model weights</text>
+<rect x="445" y="145" width="325" height="160" fill="white" stroke="#426c63" stroke-width="1.5"/>
+<text x="607.5" y="180.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="20" font-weight="700" fill="#426c63">Fault-aware aggregator</text>
+<text x="607.5" y="210.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="19" font-weight="400" fill="#426c63">Algorithm 2</text>
+<text x="607.5" y="240.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="19" font-weight="400" fill="#426c63">Contribution-weighted aggregation</text>
+<text x="607.5" y="270.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="19" font-weight="400" fill="#426c63">Global encoder and classifier</text>
+<rect x="830" y="145" width="325" height="160" fill="white" stroke="#806341" stroke-width="1.5"/>
+<text x="992.5" y="180.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="700" fill="#806341">Federated fault memory</text>
+<text x="992.5" y="210.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#806341">Verified fault–action cases</text>
+<text x="992.5" y="240.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#806341">Vector indexing and retrieval</text>
+<text x="992.5" y="270.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#806341">Shared knowledge summaries</text>
+<rect x="1215" y="145" width="325" height="160" fill="white" stroke="#657079" stroke-width="1.5"/>
+<text x="1377.5" y="180.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="700" fill="#657079">Resource controller</text>
+<text x="1377.5" y="210.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="20" font-weight="400" fill="#657079">Compute, memory and network</text>
+<text x="1377.5" y="240.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="20" font-weight="400" fill="#657079">State collection and global priors</text>
+<text x="1377.5" y="270.0" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="20" font-weight="400" fill="#657079">Support for mode selection</text>
+<text x="222" y="332" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">Inference collaboration</text>
+<text x="607" y="332" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">Model collaboration</text>
+<text x="992" y="332" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">Knowledge collaboration</text>
+<text x="1377" y="332" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">Resource coordination</text>
+<polyline points="90,548 90,355" fill="none" stroke="#345775" stroke-width="1.6"/>
+<polygon points="90,355 86.0,365.0 94.0,365.0" fill="#345775"/>
+<polyline points="355,355 355,548" fill="none" stroke="#345775" stroke-width="1.6"/>
+<polygon points="355,548 359.0,538.0 351.0,538.0" fill="#345775"/>
+<text x="220" y="397" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">Compressed context;</text>
+<text x="220" y="423" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">candidate diagnoses</text>
+<text x="220" y="476" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">Root cause;</text>
+<text x="220" y="502" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#345775">action plan</text>
+<polyline points="475,548 475,355" fill="none" stroke="#426c63" stroke-width="1.6"/>
+<polygon points="475,355 471.0,365.0 479.0,365.0" fill="#426c63"/>
+<polyline points="740,355 740,548" fill="none" stroke="#426c63" stroke-width="1.6"/>
+<polygon points="740,548 744.0,538.0 736.0,538.0" fill="#426c63"/>
+<text x="605" y="397" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#426c63">Quantized / sparse updates;</text>
+<text x="605" y="423" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#426c63">label and quality statistics</text>
+<text x="605" y="476" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#426c63">Global encoder</text>
+<text x="605" y="502" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#426c63">and classifier</text>
+<polyline points="860,548 860,355" fill="none" stroke="#806341" stroke-width="1.6"/>
+<polygon points="860,355 856.0,365.0 864.0,365.0" fill="#806341"/>
+<polyline points="1125,355 1125,548" fill="none" stroke="#806341" stroke-width="1.6"/>
+<polygon points="1125,548 1129.0,538.0 1121.0,538.0" fill="#806341"/>
+<text x="990" y="397" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#806341">Verified structured</text>
+<text x="990" y="423" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#806341">fault–action cases</text>
+<text x="990" y="476" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#806341">Memory summaries;</text>
+<text x="990" y="502" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#806341">retrieval results</text>
+<polyline points="1245,548 1245,355" fill="none" stroke="#657079" stroke-width="1.6" stroke-dasharray="8 5"/>
+<polygon points="1245,355 1241.0,365.0 1249.0,365.0" fill="#657079"/>
+<polyline points="1510,355 1510,548" fill="none" stroke="#657079" stroke-width="1.6" stroke-dasharray="8 5"/>
+<polygon points="1510,548 1514.0,538.0 1506.0,538.0" fill="#657079"/>
+<text x="1375" y="397" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">Node resource</text>
+<text x="1375" y="423" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">and network states</text>
+<text x="1375" y="476" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">Global priors;</text>
+<text x="1375" y="502" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="21" font-weight="400" fill="#657079">decision support</text>
+<rect x="35" y="550" width="1530" height="380" fill="white" stroke="#657079" stroke-width="1.5"/>
+<text x="60" y="578" text-anchor="start" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="24" font-weight="700" fill="#26333b">HETEROGENEOUS END NODES</text>
+<polyline points="70,610 1530,610" fill="none" stroke="#657079" stroke-width="1.6"/>
+<polyline points="290,610 290,640" fill="none" stroke="#657079" stroke-width="1.6"/>
+<polygon points="290,640 294.0,630.0 286.0,630.0" fill="#657079"/>
+<rect x="60" y="640" width="460" height="260" fill="white" stroke="#26333b" stroke-width="1.5"/>
+<text x="290" y="670" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="25" font-weight="700" fill="#26333b">Tier A: 5 nodes (high resource)</text>
+<polyline points="60,696 520,696" fill="none" stroke="#657079" stroke-width="1"/>
+<text x="290" y="726" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="400" fill="#26333b">Services and local observations</text>
+<text x="290" y="767" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="700" fill="#426c63">Fault encoder + classifier (trainable)</text>
+<text x="290" y="808" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#345775">Local SLM: 1.5B / 4-bit (frozen)</text>
+<text x="290" y="849" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#26333b">Mode selection · Local training</text>
+<text x="290" y="880" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#26333b">Action execution · Feedback validation</text>
+<polyline points="800,610 800,640" fill="none" stroke="#657079" stroke-width="1.6"/>
+<polygon points="800,640 804.0,630.0 796.0,630.0" fill="#657079"/>
+<rect x="570" y="640" width="460" height="260" fill="white" stroke="#26333b" stroke-width="1.5"/>
+<text x="800" y="670" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="25" font-weight="700" fill="#26333b">Tier B: 6 nodes (medium resource)</text>
+<polyline points="570,696 1030,696" fill="none" stroke="#657079" stroke-width="1"/>
+<text x="800" y="726" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="400" fill="#26333b">Services and local observations</text>
+<text x="800" y="767" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="700" fill="#426c63">Fault encoder + classifier (trainable)</text>
+<text x="800" y="808" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#345775">Available modes: Lightweight / Edge</text>
+<text x="800" y="849" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#26333b">Mode selection · Local training</text>
+<text x="800" y="880" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#26333b">Action execution · Feedback validation</text>
+<polyline points="1310,610 1310,640" fill="none" stroke="#657079" stroke-width="1.6"/>
+<polygon points="1310,640 1314.0,630.0 1306.0,630.0" fill="#657079"/>
+<rect x="1080" y="640" width="460" height="260" fill="white" stroke="#26333b" stroke-width="1.5"/>
+<text x="1310" y="670" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="25" font-weight="700" fill="#26333b">Tier C: 5 nodes (low resource)</text>
+<polyline points="1080,696 1540,696" fill="none" stroke="#657079" stroke-width="1"/>
+<text x="1310" y="726" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="400" fill="#26333b">Services and local observations</text>
+<text x="1310" y="767" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="700" fill="#426c63">Fault encoder + classifier (trainable)</text>
+<text x="1310" y="808" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#345775">Available modes: Lightweight / Edge</text>
+<text x="1310" y="849" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#26333b">Mode selection · Local training</text>
+<text x="1310" y="880" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="22" font-weight="400" fill="#26333b">Action execution · Feedback validation</text>
+<text x="800" y="967" text-anchor="middle" dominant-baseline="central" font-family="Times New Roman, Times, serif" font-size="23" font-weight="400" fill="#26333b">Raw observations remain local. Only the encoder and classifier participate in federated optimization.</text>
+</svg>

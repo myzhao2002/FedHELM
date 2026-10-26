@@ -1,0 +1,30 @@
+.venv/
+__pycache__/
+runtime/
+tmp/
+*.pyc
+tools/*.exe
+tools/kind*
+
+secrets/
+data/alfa/
+artifacts/
+
+# Local credentials, runtime databases, and trained weights must never be committed.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.sqlite
+*.sqlite3
+*.db
+*.pt
+*.pth
+*.safetensors
+*.onnx
+
+# Manuscript files are not part of the source-code release.
+/FedHELM-cn.pdf
+/FedHELM-en.pdf

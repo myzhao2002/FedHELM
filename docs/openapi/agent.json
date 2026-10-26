@@ -1,0 +1,896 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FedHELM · 端节点故障管理",
+    "description": "FedHELM中文接口文档。大小语言模型保留替身，轻量模型支持真实PyTorch训练。点击接口查看输入输出，使用“Try it out”进行测试。",
+    "version": "2.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "检查服务存活状态",
+        "description": "返回进程状态与模拟标记；业务是否恢复请查看观测结果。",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artifacts": {
+      "get": {
+        "summary": "查看本端运行模型、数据样本和本地操作日志",
+        "operationId": "artifacts_artifacts_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources": {
+      "put": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "上报或查看资源状态",
+        "description": "资源包括节点档次、CPU、内存、带宽、往返时延和边缘可达性，source字段区分实测与人工策略；带宽可为先验，不能当作实测。",
+        "operationId": "set_resources_resources_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Resources"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resource-override": {
+      "delete": {
+        "summary": "清除网络实验覆盖并恢复实测资源输入",
+        "operationId": "clear_override_resource_override_delete",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/telemetry": {
+      "get": {
+        "summary": "查看端侧持续采集的实测窗口与异常证据",
+        "operationId": "telemetry_status_telemetry_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "同步模型和共享案例",
+        "description": "拉取全局模型与案例，并向边缘上报资源状态。",
+        "operationId": "sync_sync_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/run": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "采集、诊断、处置并验证",
+        "description": "触发一次观测、诊断、执行和恢复验证流程；可选自动、轻量、本地小模型或边缘大模型路径。",
+        "operationId": "run_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/train": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "本地训练并上传模型增量",
+        "description": "torch模式执行实际梯度训练与验证；mock模式生成模拟更新。",
+        "operationId": "train_train_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validation-settings": {
+      "put": {
+        "summary": "设置恢复观察时长，支持论文300秒窗口",
+        "operationId": "validation_settings_validation_settings_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidationSettings"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/evaluate": {
+      "post": {
+        "summary": "使用当前数据集独立测试分区评估本端模型",
+        "operationId": "evaluate_dataset_datasets_evaluate_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets": {
+      "get": {
+        "summary": "查看本端离线数据集与当前训练选择",
+        "operationId": "list_datasets_datasets_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/preview/{dataset_id}": {
+      "get": {
+        "summary": "预览标准事件数据，每类一个代表事件",
+        "operationId": "preview_dataset_datasets_preview__dataset_id__get",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/schema": {
+      "get": {
+        "summary": "下载统一时序数据集JSON格式定义",
+        "operationId": "dataset_schema_datasets_schema_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/import": {
+      "post": {
+        "summary": "导入外部或虚构时序数据集，保留数据来源",
+        "operationId": "import_dataset_datasets_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetImport"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/generate": {
+      "post": {
+        "summary": "生成明确标注的虚构时序样本，不注入实时业务",
+        "operationId": "generate_dataset_datasets_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/selection": {
+      "put": {
+        "summary": "选择训练数据集；null使用实测采集数据",
+        "operationId": "select_dataset_datasets_selection_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/collect": {
+      "post": {
+        "summary": "采集本节点真实故障训练数据",
+        "description": "在本节点测试业务逐类注入故障并采集HTTP观测，最后恢复正常；每次事件独立划入训练或验证集。",
+        "operationId": "collect_collect_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DatasetImport": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+            "title": "Dataset Id"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "external",
+              "testbed"
+            ],
+            "title": "Source"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Description",
+            "default": ""
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/Record"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Records"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dataset_id",
+          "source",
+          "records"
+        ],
+        "title": "DatasetImport"
+      },
+      "Frame": {
+        "properties": {
+          "timestamp": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timestamp",
+            "description": "采样Unix时间，可选；不作为模型特征"
+          },
+          "availability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Availability",
+            "description": "业务健康比例，0到1"
+          },
+          "error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Error Rate",
+            "description": "请求错误率，0到1"
+          },
+          "latency_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Latency Ms",
+            "description": "业务请求时延，毫秒"
+          },
+          "pool_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Pool Usage",
+            "description": "数据库连接池占用比例"
+          },
+          "worker_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Worker Usage",
+            "description": "工作线程占用比例"
+          },
+          "worker_wait_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Worker Wait Ms",
+            "description": "工作线程等待时长，毫秒"
+          },
+          "db_wait_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Db Wait Ms",
+            "description": "数据库连接等待，毫秒"
+          },
+          "dependency_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Dependency Ms",
+            "description": "下游HTTP依赖耗时，毫秒"
+          },
+          "dependency_error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Dependency Error Rate",
+            "description": "下游依赖错误率"
+          },
+          "config_error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Config Error Rate",
+            "description": "配置校验操作失败比例"
+          },
+          "cpu_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Cpu Usage",
+            "description": "业务进程CPU占用比例"
+          },
+          "rss_mb": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Rss Mb",
+            "description": "业务进程常驻内存，MB"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "availability",
+          "error_rate",
+          "latency_ms",
+          "pool_usage",
+          "worker_usage",
+          "worker_wait_ms",
+          "db_wait_ms",
+          "dependency_ms",
+          "dependency_error_rate",
+          "config_error_rate",
+          "cpu_usage",
+          "rss_mb"
+        ],
+        "title": "Frame"
+      },
+      "GenerateRequest": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+            "title": "Dataset Id"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed",
+            "default": 631
+          },
+          "per_class": {
+            "type": "integer",
+            "maximum": 30.0,
+            "minimum": 3.0,
+            "title": "Per Class",
+            "default": 6
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "balanced",
+              "non_iid",
+              "transition"
+            ],
+            "title": "Profile",
+            "default": "non_iid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dataset_id"
+        ],
+        "title": "GenerateRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Record": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Event Id"
+          },
+          "label": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout"
+            ],
+            "title": "Label"
+          },
+          "split": {
+            "type": "string",
+            "enum": [
+              "train",
+              "validation",
+              "test"
+            ],
+            "title": "Split"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/Frame"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Series",
+            "description": "按时间先后排列，最多20个真实或虚构时点"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "label",
+          "split",
+          "series"
+        ],
+        "title": "Record"
+      },
+      "Resources": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ],
+            "title": "Tier"
+          },
+          "cpu_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Cpu Usage",
+            "default": 0.2
+          },
+          "memory_available_mb": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Memory Available Mb",
+            "default": 2048
+          },
+          "bandwidth_mbps": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Bandwidth Mbps",
+            "default": 50
+          },
+          "rtt_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Rtt Ms",
+            "default": 10
+          },
+          "edge_available": {
+            "type": "boolean",
+            "title": "Edge Available",
+            "default": true
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "manual-policy"
+          },
+          "cpu_cores": {
+            "type": "integer",
+            "title": "Cpu Cores",
+            "default": 1
+          },
+          "energy_source": {
+            "type": "string",
+            "title": "Energy Source",
+            "default": "estimated, no power meter"
+          },
+          "bandwidth_source": {
+            "type": "string",
+            "title": "Bandwidth Source",
+            "default": "configured prior"
+          },
+          "edge_queue": {
+            "type": "integer",
+            "title": "Edge Queue",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "tier"
+        ],
+        "title": "Resources"
+      },
+      "RunRequest": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Id"
+          },
+          "force_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "lightweight",
+                  "local",
+                  "edge"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Force Mode"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ValidationSettings": {
+        "properties": {
+          "seconds": {
+            "type": "number",
+            "maximum": 300.0,
+            "minimum": 0.0,
+            "title": "Seconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "seconds"
+        ],
+        "title": "ValidationSettings"
+      }
+    }
+  }
+}

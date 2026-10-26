@@ -1,0 +1,170 @@
+{
+  "name": "FedHELM 边端仿真集群",
+  "edge_url": "http://127.0.0.1:15000",
+  "federation_url": "http://127.0.0.1:15001",
+  "llm_edge_url": "http://127.0.0.1:15002",
+  "llm_local_url": "http://127.0.0.1:15003",
+  "injector_url": "http://127.0.0.1:15090",
+  "nodes": [
+    {
+      "id": "a01",
+      "tier": "A",
+      "agent_url": "http://127.0.0.1:15101",
+      "workload_url": "http://127.0.0.1:15201",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.75,
+      "memory_mb": 512
+    },
+    {
+      "id": "a02",
+      "tier": "A",
+      "agent_url": "http://127.0.0.1:15102",
+      "workload_url": "http://127.0.0.1:15202",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.75,
+      "memory_mb": 512
+    },
+    {
+      "id": "a03",
+      "tier": "A",
+      "agent_url": "http://127.0.0.1:15103",
+      "workload_url": "http://127.0.0.1:15203",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.75,
+      "memory_mb": 512
+    },
+    {
+      "id": "a04",
+      "tier": "A",
+      "agent_url": "http://127.0.0.1:15104",
+      "workload_url": "http://127.0.0.1:15204",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.75,
+      "memory_mb": 512
+    },
+    {
+      "id": "a05",
+      "tier": "A",
+      "agent_url": "http://127.0.0.1:15105",
+      "workload_url": "http://127.0.0.1:15205",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.75,
+      "memory_mb": 512
+    },
+    {
+      "id": "b01",
+      "tier": "B",
+      "agent_url": "http://127.0.0.1:15106",
+      "workload_url": "http://127.0.0.1:15206",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.5,
+      "memory_mb": 384
+    },
+    {
+      "id": "b02",
+      "tier": "B",
+      "agent_url": "http://127.0.0.1:15107",
+      "workload_url": "http://127.0.0.1:15207",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.5,
+      "memory_mb": 384
+    },
+    {
+      "id": "b03",
+      "tier": "B",
+      "agent_url": "http://127.0.0.1:15108",
+      "workload_url": "http://127.0.0.1:15208",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.5,
+      "memory_mb": 384
+    },
+    {
+      "id": "b04",
+      "tier": "B",
+      "agent_url": "http://127.0.0.1:15109",
+      "workload_url": "http://127.0.0.1:15209",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.5,
+      "memory_mb": 384
+    },
+    {
+      "id": "b05",
+      "tier": "B",
+      "agent_url": "http://127.0.0.1:15110",
+      "workload_url": "http://127.0.0.1:15210",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.5,
+      "memory_mb": 384
+    },
+    {
+      "id": "b06",
+      "tier": "B",
+      "agent_url": "http://127.0.0.1:15111",
+      "workload_url": "http://127.0.0.1:15211",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.5,
+      "memory_mb": 384
+    },
+    {
+      "id": "c01",
+      "tier": "C",
+      "agent_url": "http://127.0.0.1:15112",
+      "workload_url": "http://127.0.0.1:15212",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.25,
+      "memory_mb": 256
+    },
+    {
+      "id": "c02",
+      "tier": "C",
+      "agent_url": "http://127.0.0.1:15113",
+      "workload_url": "http://127.0.0.1:15213",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.25,
+      "memory_mb": 256
+    },
+    {
+      "id": "c03",
+      "tier": "C",
+      "agent_url": "http://127.0.0.1:15114",
+      "workload_url": "http://127.0.0.1:15214",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.25,
+      "memory_mb": 256
+    },
+    {
+      "id": "c04",
+      "tier": "C",
+      "agent_url": "http://127.0.0.1:15115",
+      "workload_url": "http://127.0.0.1:15215",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.25,
+      "memory_mb": 256
+    },
+    {
+      "id": "c05",
+      "tier": "C",
+      "agent_url": "http://127.0.0.1:15116",
+      "workload_url": "http://127.0.0.1:15216",
+      "host": "windows-local",
+      "placement": "local-process",
+      "cpu_limit": 0.25,
+      "memory_mb": 256
+    }
+  ]
+}

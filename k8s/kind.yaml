@@ -1,0 +1,23 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    labels:
+      fedhelm-role: edge
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 13000
+        listenAddress: "127.0.0.1"
+        protocol: TCP
+  - role: worker
+    labels:
+      fedhelm-role: end
+      fedhelm-tier: A
+  - role: worker
+    labels:
+      fedhelm-role: end
+      fedhelm-tier: B
+  - role: worker
+    labels:
+      fedhelm-role: end
+      fedhelm-tier: C

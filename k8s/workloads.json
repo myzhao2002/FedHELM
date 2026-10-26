@@ -1,0 +1,2035 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "metadata": {
+        "name": "fedhelm"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "edge",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "edge"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "edge"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "edge",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.edge:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "LLM_URL",
+                    "value": "http://llm-edge:8000"
+                  },
+                  {
+                    "name": "LOCAL_LLM_URL",
+                    "value": "http://llm-local:8000"
+                  },
+                  {
+                    "name": "FEDERATION_URL",
+                    "value": "http://federation:8000"
+                  },
+                  {
+                    "name": "AGENT_A_URL",
+                    "value": "http://agent-a:8000"
+                  },
+                  {
+                    "name": "WORKLOAD_A_URL",
+                    "value": "http://workload-a:8000"
+                  },
+                  {
+                    "name": "AGENT_B_URL",
+                    "value": "http://agent-b:8000"
+                  },
+                  {
+                    "name": "WORKLOAD_B_URL",
+                    "value": "http://workload-b:8000"
+                  },
+                  {
+                    "name": "AGENT_C_URL",
+                    "value": "http://agent-c:8000"
+                  },
+                  {
+                    "name": "WORKLOAD_C_URL",
+                    "value": "http://workload-c:8000"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-role": "edge"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/edge",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ],
+            "tolerations": [
+              {
+                "key": "node-role.kubernetes.io/control-plane",
+                "operator": "Exists",
+                "effect": "NoSchedule"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "edge",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "edge"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000,
+            "nodePort": 30080
+          }
+        ],
+        "type": "NodePort"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "federation",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "federation"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "federation"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "federation",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.federation:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "EDGE_URL",
+                    "value": "http://edge:8000"
+                  },
+                  {
+                    "name": "TRAINING_BACKEND",
+                    "value": "torch"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "768Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-role": "edge"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/federation",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ],
+            "tolerations": [
+              {
+                "key": "node-role.kubernetes.io/control-plane",
+                "operator": "Exists",
+                "effect": "NoSchedule"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "federation",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "federation"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "llm-edge",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "llm-edge"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "llm-edge"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "llm-edge",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.llm:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "MODEL_MODE",
+                    "value": "edge"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-role": "edge"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/llm-edge",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ],
+            "tolerations": [
+              {
+                "key": "node-role.kubernetes.io/control-plane",
+                "operator": "Exists",
+                "effect": "NoSchedule"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "llm-edge",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "llm-edge"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "llm-local",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "llm-local"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "llm-local"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "llm-local",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.llm:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "MODEL_MODE",
+                    "value": "local"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "A"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/llm-local",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "llm-local",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "llm-local"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "fault-controller-a",
+        "namespace": "fedhelm"
+      }
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "fault-controller-a",
+        "namespace": "fedhelm"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "deployments/scale"
+          ],
+          "resourceNames": [
+            "business-a"
+          ],
+          "verbs": [
+            "get",
+            "patch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "fault-controller-a",
+        "namespace": "fedhelm"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "fault-controller-a"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "fault-controller-a",
+          "namespace": "fedhelm"
+        }
+      ]
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "agent-a",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "agent-a"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "agent-a"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "agent-a",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.agent:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "NODE_ID",
+                    "value": "a"
+                  },
+                  {
+                    "name": "TIER",
+                    "value": "A"
+                  },
+                  {
+                    "name": "EDGE_URL",
+                    "value": "http://edge:8000"
+                  },
+                  {
+                    "name": "FEDERATION_URL",
+                    "value": "http://federation:8000"
+                  },
+                  {
+                    "name": "WORKLOAD_URL",
+                    "value": "http://workload-a:8000"
+                  },
+                  {
+                    "name": "LOCAL_LLM_URL",
+                    "value": "http://llm-local:8000"
+                  },
+                  {
+                    "name": "TRAINING_BACKEND",
+                    "value": "torch"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "768Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "A"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/agent-a",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "agent-a",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "agent-a"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "workload-a",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "workload-a"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "workload-a"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "workload-a",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.k8s_workload:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "NODE_ID",
+                    "value": "a"
+                  },
+                  {
+                    "name": "POD_NAMESPACE",
+                    "value": "fedhelm"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "A"
+            },
+            "automountServiceAccountToken": true,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/workload-a",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ],
+            "serviceAccountName": "fault-controller-a"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "workload-a",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "workload-a"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "business-a",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "business-a"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "business-a"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "business-a",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "fedhelm.business",
+                  "--standalone",
+                  "--port",
+                  "8000",
+                  "--directory",
+                  "/data"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "A"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/business-a",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "business-a",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "business-a"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "fault-controller-b",
+        "namespace": "fedhelm"
+      }
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "fault-controller-b",
+        "namespace": "fedhelm"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "deployments/scale"
+          ],
+          "resourceNames": [
+            "business-b"
+          ],
+          "verbs": [
+            "get",
+            "patch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "fault-controller-b",
+        "namespace": "fedhelm"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "fault-controller-b"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "fault-controller-b",
+          "namespace": "fedhelm"
+        }
+      ]
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "agent-b",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "agent-b"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "agent-b"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "agent-b",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.agent:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "NODE_ID",
+                    "value": "b"
+                  },
+                  {
+                    "name": "TIER",
+                    "value": "B"
+                  },
+                  {
+                    "name": "EDGE_URL",
+                    "value": "http://edge:8000"
+                  },
+                  {
+                    "name": "FEDERATION_URL",
+                    "value": "http://federation:8000"
+                  },
+                  {
+                    "name": "WORKLOAD_URL",
+                    "value": "http://workload-b:8000"
+                  },
+                  {
+                    "name": "LOCAL_LLM_URL",
+                    "value": "http://llm-local:8000"
+                  },
+                  {
+                    "name": "TRAINING_BACKEND",
+                    "value": "torch"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "768Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "B"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/agent-b",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "agent-b",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "agent-b"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "workload-b",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "workload-b"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "workload-b"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "workload-b",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.k8s_workload:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "NODE_ID",
+                    "value": "b"
+                  },
+                  {
+                    "name": "POD_NAMESPACE",
+                    "value": "fedhelm"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "B"
+            },
+            "automountServiceAccountToken": true,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/workload-b",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ],
+            "serviceAccountName": "fault-controller-b"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "workload-b",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "workload-b"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "business-b",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "business-b"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "business-b"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "business-b",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "fedhelm.business",
+                  "--standalone",
+                  "--port",
+                  "8000",
+                  "--directory",
+                  "/data"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "B"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/business-b",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "business-b",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "business-b"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": {
+        "name": "fault-controller-c",
+        "namespace": "fedhelm"
+      }
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": {
+        "name": "fault-controller-c",
+        "namespace": "fedhelm"
+      },
+      "rules": [
+        {
+          "apiGroups": [
+            "apps"
+          ],
+          "resources": [
+            "deployments/scale"
+          ],
+          "resourceNames": [
+            "business-c"
+          ],
+          "verbs": [
+            "get",
+            "patch"
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "RoleBinding",
+      "metadata": {
+        "name": "fault-controller-c",
+        "namespace": "fedhelm"
+      },
+      "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "fault-controller-c"
+      },
+      "subjects": [
+        {
+          "kind": "ServiceAccount",
+          "name": "fault-controller-c",
+          "namespace": "fedhelm"
+        }
+      ]
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "agent-c",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "agent-c"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "agent-c"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "agent-c",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.agent:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "NODE_ID",
+                    "value": "c"
+                  },
+                  {
+                    "name": "TIER",
+                    "value": "C"
+                  },
+                  {
+                    "name": "EDGE_URL",
+                    "value": "http://edge:8000"
+                  },
+                  {
+                    "name": "FEDERATION_URL",
+                    "value": "http://federation:8000"
+                  },
+                  {
+                    "name": "WORKLOAD_URL",
+                    "value": "http://workload-c:8000"
+                  },
+                  {
+                    "name": "LOCAL_LLM_URL",
+                    "value": "http://llm-local:8000"
+                  },
+                  {
+                    "name": "TRAINING_BACKEND",
+                    "value": "torch"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "768Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "C"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/agent-c",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "agent-c",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "agent-c"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "workload-c",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "workload-c"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "workload-c"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "workload-c",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "uvicorn",
+                  "fedhelm.k8s_workload:app",
+                  "--host",
+                  "0.0.0.0",
+                  "--port",
+                  "8000"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "NODE_ID",
+                    "value": "c"
+                  },
+                  {
+                    "name": "POD_NAMESPACE",
+                    "value": "fedhelm"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "C"
+            },
+            "automountServiceAccountToken": true,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/workload-c",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ],
+            "serviceAccountName": "fault-controller-c"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "workload-c",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "workload-c"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "business-c",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "replicas": 1,
+        "strategy": {
+          "type": "Recreate"
+        },
+        "selector": {
+          "matchLabels": {
+            "app": "business-c"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "business-c"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "business-c",
+                "image": "fedhelm-training:v1",
+                "imagePullPolicy": "IfNotPresent",
+                "command": [
+                  "python",
+                  "-m",
+                  "fedhelm.business",
+                  "--standalone",
+                  "--port",
+                  "8000",
+                  "--directory",
+                  "/data"
+                ],
+                "ports": [
+                  {
+                    "containerPort": 8000
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "DATA_DIR",
+                    "value": "/data"
+                  },
+                  {
+                    "name": "K8S_NODE_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "spec.nodeName"
+                      }
+                    }
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "20m",
+                    "memory": "80Mi"
+                  },
+                  "limits": {
+                    "cpu": "750m",
+                    "memory": "256Mi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "data",
+                    "mountPath": "/data"
+                  }
+                ],
+                "readinessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 2,
+                  "periodSeconds": 2
+                },
+                "livenessProbe": {
+                  "httpGet": {
+                    "path": "/health",
+                    "port": 8000
+                  },
+                  "initialDelaySeconds": 30,
+                  "periodSeconds": 10,
+                  "failureThreshold": 6
+                }
+              }
+            ],
+            "nodeSelector": {
+              "fedhelm-tier": "C"
+            },
+            "automountServiceAccountToken": false,
+            "volumes": [
+              {
+                "name": "data",
+                "hostPath": {
+                  "path": "/var/local/fedhelm/business-c",
+                  "type": "DirectoryOrCreate"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "business-c",
+        "namespace": "fedhelm"
+      },
+      "spec": {
+        "selector": {
+          "app": "business-c"
+        },
+        "ports": [
+          {
+            "port": 8000,
+            "targetPort": 8000
+          }
+        ]
+      }
+    }
+  ]
+}

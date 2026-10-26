@@ -1,0 +1,90 @@
+name: fedhelm-prototype
+x-common: &common
+  build: .
+  image: fedhelm-prototype:local
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health',timeout=2)"]
+    interval: 5s
+    timeout: 3s
+    retries: 12
+  cpus: 1.0
+  mem_limit: 512m
+services:
+  edge:
+    <<: *common
+    environment:
+      LLM_URL: http://llm-edge:8000
+      LOCAL_LLM_URL: http://llm-local:8000
+      FEDERATION_URL: http://federation:8000
+      AGENT_A_URL: http://agent-a:8000
+      AGENT_B_URL: http://agent-b:8000
+      AGENT_C_URL: http://agent-c:8000
+      WORKLOAD_A_URL: http://workload-a:8000
+      WORKLOAD_B_URL: http://workload-b:8000
+      WORKLOAD_C_URL: http://workload-c:8000
+    ports: ["127.0.0.1:8000:8000"]
+    volumes: ["edge-data:/data"]
+  federation:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.federation:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports: ["127.0.0.1:8001:8000"]
+    volumes: ["federation-data:/data"]
+  llm-edge:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.llm:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {MODEL_MODE: edge}
+  llm-local:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.llm:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {MODEL_MODE: local}
+  agent-a:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.agent:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {NODE_ID: a, TIER: A, EDGE_URL: "http://edge:8000", FEDERATION_URL: "http://federation:8000", WORKLOAD_URL: "http://workload-a:8000", LOCAL_LLM_URL: "http://llm-local:8000"}
+    ports: ["127.0.0.1:8101:8000"]
+    volumes: ["agent-a-data:/data"]
+    cpus: 1.0
+    mem_limit: 512m
+  agent-b:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.agent:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {NODE_ID: b, TIER: B, EDGE_URL: "http://edge:8000", FEDERATION_URL: "http://federation:8000", WORKLOAD_URL: "http://workload-b:8000"}
+    ports: ["127.0.0.1:8102:8000"]
+    volumes: ["agent-b-data:/data"]
+    cpus: 0.75
+    mem_limit: 384m
+  agent-c:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.agent:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {NODE_ID: c, TIER: C, EDGE_URL: "http://edge:8000", FEDERATION_URL: "http://federation:8000", WORKLOAD_URL: "http://workload-c:8000"}
+    ports: ["127.0.0.1:8103:8000"]
+    volumes: ["agent-c-data:/data"]
+    cpus: 0.5
+    mem_limit: 256m
+  workload-a:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.workload:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {NODE_ID: a}
+    ports: ["127.0.0.1:8201:8000"]
+    volumes: ["workload-a-data:/data"]
+  workload-b:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.workload:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {NODE_ID: b}
+    ports: ["127.0.0.1:8202:8000"]
+    volumes: ["workload-b-data:/data"]
+  workload-c:
+    <<: *common
+    command: ["python", "-m", "uvicorn", "fedhelm.workload:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: {NODE_ID: c}
+    ports: ["127.0.0.1:8203:8000"]
+    volumes: ["workload-c-data:/data"]
+volumes:
+  edge-data:
+  federation-data:
+  agent-a-data:
+  agent-b-data:
+  agent-c-data:
+  workload-a-data:
+  workload-b-data:
+  workload-c-data:

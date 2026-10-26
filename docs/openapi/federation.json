@@ -1,0 +1,448 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FedHELM · 联邦聚合协调器",
+    "description": "FedHELM中文接口文档。大小语言模型保留替身，轻量模型支持真实PyTorch训练。点击接口查看输入输出，使用“Try it out”进行测试。",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "检查服务存活状态",
+        "description": "返回进程状态与模拟标记；业务是否恢复请查看观测结果。",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/round": {
+      "get": {
+        "summary": "查看持久化模型更新与聚合轮次",
+        "operationId": "round_status_round_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "获取当前全局轻量模型",
+        "description": "返回全局模型版本、适配器和参数；torch模式为真实训练参数。",
+        "operationId": "model_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/updates": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "上传端节点模型增量",
+        "description": "检查基础版本、样本统计与重复提交；过期或冲突更新返回409，接收成功的增量写入边缘SQLite。",
+        "operationId": "update_updates_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Update"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/updates/compressed": {
+      "post": {
+        "summary": "接收Top50%稀疏、分块INT8量化增量并校验",
+        "operationId": "compressed_update_updates_compressed_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompressedUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aggregate": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "执行一轮联邦聚合",
+        "description": "等待A/B/C更新齐备，按贡献度合并端侧增量并保存新版本；训练来源由training_backend标记。",
+        "operationId": "aggregate_aggregate_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/algorithm": {
+      "get": {
+        "summary": "查看贡献度评分、EWMA与探针覆盖",
+        "operationId": "algorithm_status_algorithm_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CompressedUpdate": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "base_version": {
+            "type": "integer",
+            "title": "Base Version"
+          },
+          "sample_count": {
+            "type": "integer",
+            "title": "Sample Count"
+          },
+          "label_histogram": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Label Histogram"
+          },
+          "quality": {
+            "type": "number",
+            "title": "Quality"
+          },
+          "packet": {
+            "$ref": "#/components/schemas/Packet"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "base_version",
+          "sample_count",
+          "label_histogram",
+          "quality",
+          "packet"
+        ],
+        "title": "CompressedUpdate"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Model": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Version",
+            "default": 0
+          },
+          "parameters": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 200000,
+            "minItems": 4,
+            "title": "Parameters"
+          },
+          "adapter": {
+            "type": "string",
+            "enum": [
+              "mock-bias-v1",
+              "torch-mlp-v1",
+              "temporal-transformer-v2"
+            ],
+            "title": "Adapter",
+            "default": "mock-bias-v1"
+          },
+          "training_samples": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Training Samples",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Model"
+      },
+      "Packet": {
+        "properties": {
+          "dimensions": {
+            "type": "integer",
+            "maximum": 200000.0,
+            "minimum": 4.0,
+            "title": "Dimensions"
+          },
+          "block_size": {
+            "type": "integer",
+            "maximum": 256.0,
+            "minimum": 256.0,
+            "title": "Block Size",
+            "default": 256
+          },
+          "indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "maxItems": 100000,
+            "title": "Indices"
+          },
+          "values": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "maxItems": 100000,
+            "title": "Values"
+          },
+          "scales": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 782,
+            "title": "Scales"
+          },
+          "sha256": {
+            "type": "string",
+            "title": "Sha256"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dimensions",
+          "indices",
+          "values",
+          "scales",
+          "sha256"
+        ],
+        "title": "Packet"
+      },
+      "Update": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "base_version": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Base Version"
+          },
+          "sample_count": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Sample Count"
+          },
+          "delta": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 200000,
+            "minItems": 4,
+            "title": "Delta"
+          },
+          "label_histogram": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 4,
+            "title": "Label Histogram"
+          },
+          "quality": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Quality"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "base_version",
+          "sample_count",
+          "delta",
+          "label_histogram",
+          "quality"
+        ],
+        "title": "Update"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

@@ -1,0 +1,470 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FedHELM · 实际测试业务控制器",
+    "description": "受控测试床：独立HTTP进程、SQLite数据库和连接池；指标来自实际HTTP请求。故障人为注入，端侧可使用实际训练的轻量模型，新增故障使用显式日志规则。",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "检查服务存活状态",
+        "description": "返回进程状态与模拟标记；业务是否恢复请查看观测结果。",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inject": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "注入测试故障（实际进程、配置与连接池）",
+        "description": "仅操作此控制器拥有的测试业务：停止子进程、写入错误配置或占住SQLite连接。",
+        "operationId": "inject_inject_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Injection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/observe": {
+      "get": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "采集实际测试业务观测",
+        "description": "发起3次HTTP业务请求，记录响应码、错误率、中位时延、连接池占用与业务进程ID。",
+        "operationId": "observe_observe_get",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Event Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/execute": {
+      "post": {
+        "tags": [
+          "模块接口"
+        ],
+        "summary": "执行限定的处置动作",
+        "description": "在当前测试业务执行实际重启、配置恢复或连接池释放；动作执行完成不代表服务恢复，必须继续观测。",
+        "operationId": "execute_execute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plan"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Injection": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "fault": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout"
+            ],
+            "title": "Fault"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fault"
+        ],
+        "title": "Injection"
+      },
+      "Observation": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "service_id": {
+            "type": "string",
+            "title": "Service Id"
+          },
+          "healthy": {
+            "type": "boolean",
+            "title": "Healthy"
+          },
+          "error_rate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Error Rate"
+          },
+          "latency_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Latency Ms"
+          },
+          "pool_usage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Pool Usage"
+          },
+          "logs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Logs"
+          },
+          "workload_backend": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "process",
+              "kubernetes"
+            ],
+            "title": "Workload Backend",
+            "default": "synthetic"
+          },
+          "response_codes": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Response Codes"
+          },
+          "business_pid": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Business Pid"
+          },
+          "pod_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pod Name"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Metrics"
+          },
+          "spans": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Spans"
+          },
+          "observed_at": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "node_id",
+          "service_id",
+          "healthy",
+          "error_rate",
+          "latency_ms",
+          "pool_usage",
+          "logs"
+        ],
+        "title": "Observation"
+      },
+      "Plan": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulated",
+            "default": true
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "service_id": {
+            "type": "string",
+            "title": "Service Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "lightweight",
+              "local",
+              "edge"
+            ],
+            "title": "Mode"
+          },
+          "root_cause": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "service_down",
+              "config_error",
+              "pool_exhausted",
+              "thread_pool_exhausted",
+              "dependency_timeout",
+              "unknown"
+            ],
+            "title": "Root Cause"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "none",
+              "restart_service",
+              "restore_config",
+              "reset_pool",
+              "reset_workers",
+              "restore_dependency"
+            ],
+            "title": "Action"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Parameters"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event_id",
+          "node_id",
+          "service_id",
+          "mode",
+          "root_cause",
+          "confidence",
+          "action",
+          "reason"
+        ],
+        "title": "Plan"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

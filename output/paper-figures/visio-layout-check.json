@@ -1,0 +1,1103 @@
+{
+  "plan": "output\\paper-figures\\visio-reference-plan.json",
+  "findings": [
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "brand",
+        "separator"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "separator",
+        "title"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "edge_title",
+        "online"
+      ],
+      "message": "shape gap is only 0.027 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "online",
+        "server_row2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "title_a",
+        "plus"
+      ],
+      "message": "shape gap is only 0.111 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "light_a",
+        "plus"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "light_a",
+        "slm"
+      ],
+      "message": "shape gap is only 0.102 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "func_title",
+        "sense"
+      ],
+      "message": "shape gap is only 0.064 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "func_title",
+        "diagnosis"
+      ],
+      "message": "shape gap is only 0.064 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "sense",
+        "train"
+      ],
+      "message": "shape gap is only 0.012 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "diagnosis",
+        "execution"
+      ],
+      "message": "shape gap is only 0.012 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "controller_title",
+        "alg1"
+      ],
+      "message": "shape gap is only 0.114 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "resource",
+        "modes"
+      ],
+      "message": "shape gap is only 0.093 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "llm_model",
+        "llm_infer"
+      ],
+      "message": "shape gap is only 0.115 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "agg_title",
+        "weighting"
+      ],
+      "message": "shape gap is only 0.083 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "weighting",
+        "alg2"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "alg2",
+        "agg_params"
+      ],
+      "message": "shape gap is only 0.070 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "mem_modes",
+        "mem_summary"
+      ],
+      "message": "shape gap is only 0.102 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "a_front",
+        "a_led"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "a_front",
+        "a_port1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "a_front",
+        "a_port2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "a_port1",
+        "a_port2"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_chip"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_port1"
+      ],
+      "message": "independent shapes overlap (53.33% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_port2"
+      ],
+      "message": "independent shapes overlap (53.33% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot0"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot3"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot4"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot5"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "b_board",
+        "b_dot6"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "b_dot0",
+        "b_dot1"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "b_dot1",
+        "b_dot2"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "b_dot2",
+        "b_dot3"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "b_dot3",
+        "b_dot4"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "b_dot4",
+        "b_dot5"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "b_dot5",
+        "b_dot6"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_0_0"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_0_1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_0_2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_0_3"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_0_4"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_1_0"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_1_1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_1_2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_1_3"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_1_4"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_2_0"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_2_1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_2_2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_2_3"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_dot_2_4"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_port"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_knob"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "c_device",
+        "c_led"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_0",
+        "c_dot_0_1"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_0",
+        "c_dot_0_2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_0",
+        "c_dot_0_3"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_0",
+        "c_dot_1_0"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_0",
+        "c_dot_2_0"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_1",
+        "c_dot_0_2"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_1",
+        "c_dot_0_3"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_1",
+        "c_dot_0_4"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_1",
+        "c_dot_1_1"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_1",
+        "c_dot_2_1"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_2",
+        "c_dot_0_3"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_2",
+        "c_dot_0_4"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_2",
+        "c_dot_1_2"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_2",
+        "c_dot_2_2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_3",
+        "c_dot_0_4"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_3",
+        "c_dot_1_3"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_3",
+        "c_dot_2_3"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_4",
+        "c_dot_1_4"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_0_4",
+        "c_dot_2_4"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_0",
+        "c_dot_1_1"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_0",
+        "c_dot_1_2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_0",
+        "c_dot_1_3"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_0",
+        "c_dot_2_0"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_1",
+        "c_dot_1_2"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_1",
+        "c_dot_1_3"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_1",
+        "c_dot_1_4"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_1",
+        "c_dot_2_1"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_2",
+        "c_dot_1_3"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_2",
+        "c_dot_1_4"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_2",
+        "c_dot_2_2"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_3",
+        "c_dot_1_4"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_3",
+        "c_dot_2_3"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_4",
+        "c_dot_2_4"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_1_4",
+        "c_port"
+      ],
+      "message": "shape gap is only 0.110 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_0",
+        "c_dot_2_1"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_0",
+        "c_dot_2_2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_0",
+        "c_dot_2_3"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_1",
+        "c_dot_2_2"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_1",
+        "c_dot_2_3"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_1",
+        "c_dot_2_4"
+      ],
+      "message": "shape gap is only 0.100 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_2",
+        "c_dot_2_3"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_2",
+        "c_dot_2_4"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_3",
+        "c_dot_2_4"
+      ],
+      "message": "shape gap is only 0.020 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_dot_2_4",
+        "c_port"
+      ],
+      "message": "shape gap is only 0.110 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_port",
+        "c_knob"
+      ],
+      "message": "shape gap is only 0.070 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "c_knob",
+        "c_led"
+      ],
+      "message": "shape gap is only 0.050 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "server_row0",
+        "server_led0"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "server_row0",
+        "server_slot0"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_row0",
+        "server_row1"
+      ],
+      "message": "shape gap is only 0.010 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_row0",
+        "server_led1"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_row0",
+        "server_slot1"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_led0",
+        "server_row1"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_led0",
+        "server_led1"
+      ],
+      "message": "shape gap is only 0.110 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_slot0",
+        "server_row1"
+      ],
+      "message": "shape gap is only 0.070 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_slot0",
+        "server_slot1"
+      ],
+      "message": "shape gap is only 0.120 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "server_row1",
+        "server_led1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "server_row1",
+        "server_slot1"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_row1",
+        "server_row2"
+      ],
+      "message": "shape gap is only 0.010 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_row1",
+        "server_led2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_row1",
+        "server_slot2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_led1",
+        "server_row2"
+      ],
+      "message": "shape gap is only 0.060 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_led1",
+        "server_led2"
+      ],
+      "message": "shape gap is only 0.110 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_slot1",
+        "server_row2"
+      ],
+      "message": "shape gap is only 0.070 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "tight-shape-gap",
+      "shapes": [
+        "server_slot1",
+        "server_slot2"
+      ],
+      "message": "shape gap is only 0.120 in; reserve room for borders, arrowheads, and labels"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "server_row2",
+        "server_led2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    },
+    {
+      "severity": "warning",
+      "type": "shape-shape-overlap",
+      "shapes": [
+        "server_row2",
+        "server_slot2"
+      ],
+      "message": "independent shapes overlap (100.00% of smaller box); allowed by plan"
+    }
+  ]
+}
