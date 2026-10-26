@@ -7,8 +7,11 @@ tools/*.exe
 tools/kind*
 
 secrets/
-data/alfa/
+/data/
+/datasets/
+/models/
 artifacts/
+/output/
 
 # Local credentials, runtime databases, and trained weights must never be committed.
 .env
@@ -24,6 +27,15 @@ artifacts/
 *.pth
 *.safetensors
 *.onnx
+*.pkl
+*.pickle
+*.joblib
+*.ckpt
+*.npz
+*.npy
+*.h5
+*.hdf5
+*.gguf
 
 # Manuscript files are not part of the source-code release.
 /FedHELM-cn.pdf
